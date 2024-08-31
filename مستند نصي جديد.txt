@@ -1,0 +1,222 @@
+#pragma once
+#include <iostream>
+#include <string>
+using namespace std;
+
+class clsString
+{
+private:
+	string _Value;
+public:
+	clsString()
+	{
+		_Value = "";
+	}
+
+	clsString(string Value) : _Value(Value) {}
+
+	friend ostream& operator << (ostream& os, const clsString& myString)
+	{
+		os << myString._Value;
+		return os;
+	}
+
+	void setValue(string Value)
+	{
+		_Value = Value;
+	}
+	string GetValue()
+	{
+		return _Value;
+	}
+
+	_declspec(property(get = GetValue, put = setValue)) string Value;
+
+	static short CountWords(string S1)
+	{
+		short pos = 0;
+		string Word = "";
+		string delim = " ";
+		short Counter = 0;
+		while ((pos = S1.find(delim)) != std::string::npos)
+		{
+			Word = S1.substr(0, pos);
+			if (Word != "")
+			{
+				Counter++;
+			}
+			S1.erase(0, pos + delim.length());
+		}
+		if (S1 != "")
+		{
+			Counter++;
+		}
+		return Counter;
+	}
+	short CountWords()
+	{
+		return CountWords(_Value);
+	}
+
+	static short Length(string S1)
+	{
+		char* pS1 = &S1[0];
+		short Counter = 0;
+		short i = 0;
+		while ((S1.find(*(pS1 + i)) != std::string::npos))
+		{
+			Counter++;
+			i++;
+		}
+		return Counter;
+	}
+	short Length()
+	{
+		return Length(_Value);
+	}
+
+	static string Substr(string S1, short pos, short Length)
+	{
+		string Word = "";
+		while (Length--)
+		{
+			Word += S1[pos];
+			pos++;
+		}
+		return Word;
+	}
+	string Substr(short pos, short Length)
+	{
+		return Substr(_Value, pos, Length);
+	}
+
+	static short Find(string S1 , string Delim)
+	{
+		short LengthDelim = Length(Delim);
+		string Words = "";
+		for (short pos = 0; pos < Length(S1); pos++)
+		{
+			if (LengthDelim + pos > Length(S1))
+				return std::string::npos;
+			if ( Substr(S1,pos, LengthDelim) == Delim)
+				return pos;
+		}
+		return std::string::npos;
+	}
+	short Find(string Delim)
+	{
+		return  Find(_Value, Delim);
+	}
+
+	static string Replace(string S1, short pos, short Length, string ReplaceTo)
+	{
+		string Word = "";
+		Word += Substr(S1, 0, pos);
+		Word += ReplaceTo;
+		Word += Substr(S1, pos + Length, S1.length() - pos - Length);
+		return Word;
+	}
+	string Replace(short pos, short Length, string ReplaceTo)
+	{
+		return Replace(_Value, pos, Length, ReplaceTo);
+	}
+	
+	static string TrimLeft(string S1)
+	{
+		for (short i = 0; i < Length(S1); i++)
+		{
+			if (S1[i] != ' ')
+				return Substr(S1,i, Length(S1) - i);
+		}
+		return S1;
+	}	
+	string TrimLeft()
+	{
+		return TrimLeft(_Value);
+	}
+
+	static string TrimRight(string S1)
+	{
+		for (short i = S1.length() - 1; i > 0; i--)
+		{
+			if (S1[i] != ' ')
+				return Substr(S1, 0, i + 1);
+		}
+		return S1;
+	}
+	string TrimRight()
+	{
+		return TrimRight(_Value);
+	}
+
+	static string Trim(string S1)
+	{
+		S1 = TrimLeft(S1);
+		S1 = TrimRight(S1);
+		return S1;
+	}
+	string Trim()
+	{
+		return Trim(_Value);
+	}
+
+	static string ReplaceWordInStringUsingBuiltInFunction(string S1, string StringToReplace, string sRepalceTo)
+	{
+		short pos = 0;
+		while ((pos = Find(S1, StringToReplace)) != std::string::npos)
+		{
+			S1 = Replace(S1, pos, Length(StringToReplace), sRepalceTo);
+		}
+		return S1;
+	}
+	string ReplaceWordInStringUsingBuiltInFunction(string StringToReplace, string sRepalceTo)
+	{
+		return ReplaceWordInStringUsingBuiltInFunction(_Value, StringToReplace, sRepalceTo);
+	}
+
+	static string LowerAllString(string S1)
+	{
+		for (short i = 0; i < Length(S1); i++)
+		{
+			if (isupper(S1[i]))
+				S1[i] = tolower(S1[i]);
+		}
+		return S1;
+	}
+	string LowerAllString()
+	{
+		return LowerAllString(_Value);
+	}
+
+	static string upperAllString(string S1)
+	{
+		for (short i = 0; i < Length(S1); i++)
+		{
+			if (islower(S1[i]))
+				S1[i] = toupper(S1[i]);
+		}
+		return S1;
+	}
+	string upperAllString()
+	{
+		return upperAllString(_Value);
+	}
+
+	static string RemovePunctuationsFromString(string S1)
+	{
+		for (short i = 0; i < Length(S1); i++)
+		{
+			if (ispunct(S1[i]))
+			{
+				S1.erase(i, 1), i--;
+			}
+		}
+		return S1;
+	}
+	string RemovePunctuationsFromString()
+	{
+		return RemovePunctuationsFromString(_Value);
+	}
+
+};
+
